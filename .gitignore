@@ -1,3 +1,7 @@
+libraries/
+processing-3.3.7/
+**/out/
+
 .DS_Store
 applet
 application.linux32

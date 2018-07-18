@@ -1,2 +1,3 @@
-# processing-stuff
-My unoriginal processing sketches.
+# Processing Stuff
+
+My unoriginal but sometimes interesting [Processing](https://processing.org/) sketches.
