@@ -1,3 +1,9 @@
+/*
+Author: Paolo Montesel
+Description: Lines, two circles, some music.
+*/
+
+import java.io.*;
 import processing.sound.*;
 
 class Line {
@@ -15,9 +21,9 @@ class Line {
 
     public void draw(float step, float aperture) {
         rand += 0.1;
-        angle += noise(rand);
+        angle += noise(rand) * step;
         rand += 0.01;
-        direction += noise(rand);
+        direction += noise(rand) * step;
 
         float rad = radius * (1.0 + aperture);
 
@@ -30,13 +36,12 @@ class Line {
     }
 }
 
-Amplitude amp;
-SoundFile in;
-
 final int LINES_PER_LEVEL = 100;
 Line lines[] = new Line[LINES_PER_LEVEL * 2];
 void setup() {
-    size(1024, 1024);
+    // size(1024, 1024);
+    size(1920, 1080);
+    // size(3840, 2160);
     background(255);
 
     for (int i=0; i<lines.length; i++) {
@@ -44,15 +49,31 @@ void setup() {
         lines[i] = new Line(width / 100 * level);
     }
 
-    // in = new SoundFile(this, sketchPath("Aphex Twin - Flim.mp3"));
-    in = new SoundFile(this, sketchPath("../AAACircles/Fixer.mp3"));
-    in.loop();
-    amp = new Amplitude(this);
-    amp.input(in);
+    initAmps();
 }
 
+float[] amps;
+void initAmps() {
+    try {
+        FileInputStream file = new FileInputStream(sketchPath("amplitude.bin"));
+        ObjectInputStream in = new ObjectInputStream(file);
+        amps = (float[]) in.readObject();
+        in.close();
+        file.close();
+    } catch(Exception e) {
+        println("ERROR: amplitude.bin not found");
+        exit();
+    }
+}
+
+int ampIndex = 0;
 float meanAmp = 0.0f;
 void draw() {
+    if (ampIndex >= amps.length) {
+        println("FINISHED :D");
+        exit();
+    }
+
     pushStyle();
     noStroke();
     fill(255, 80);
@@ -61,12 +82,14 @@ void draw() {
 
     // stroke(0, 0, 200);
 
-    float ampVal = amp.analyze() / 0.01;
+    float ampVal = amps[ampIndex++] / 0.01;
+    ampIndex++;
     float alpha = 0.1;
     meanAmp = ampVal * (1-alpha) + alpha * meanAmp;
-    ampVal = meanAmp;
 
     for (int i=0; i<lines.length; i++) {
-        lines[i].draw(1.0 / frameRate, ampVal);
+        lines[i].draw(30.0 / 60.0, meanAmp);
     }
+
+    saveFrame("video/snap-########.jpg");
 }

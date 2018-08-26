@@ -3,9 +3,9 @@ import processing.sound.*;
 
 
 // Input file
-final String inputFile = "../AABCirclesRender/Aphex Twin - Flim.mp3";
+final String inputFile = "../AADBondMuzak/soundtrack.mp3";
 // Output file
-final String outputFile = "../AABCirclesRender/amplitude.bin";
+final String outputFile = "../AADBondMuzak/amplitude.bin";
 
 
 Amplitude amp;

@@ -10,3 +10,5 @@ application.windows32
 application.windows64
 application.macosx
 *.mp3
+*.mp4
+*.bin
